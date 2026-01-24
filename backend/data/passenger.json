@@ -1,0 +1,44 @@
+{
+  "passenger": {
+    "passenger_id": 1,
+    "full_name": "Inzeera",
+    "gender": "Female",
+    "date_of_birth": "1995-04-18",
+    "nationality": "Indian",
+    "passport_number": "N1234567"
+  },
+  "passport": {
+    "issue_country": "India",
+    "issue_date": "2018-06-10",
+    "expiry_date": "2028-06-09",
+    "passport_type": "Regular",
+    "passport_photo": "base64_passport_image"
+  },
+  "visa": {
+    "visa_type": "Tourist",
+    "issue_date": "2024-12-01",
+    "expiry_date": "2025-06-01",
+    "entry_type": "Single",
+    "sponsor_type": "Self"
+  },
+  "enquiry_form": {
+    "purpose_of_visit": "Attending cousin's wedding",
+    "event_type": "Wedding",
+    "duration_of_stay_days": 14,
+    "address_of_stay": "Hotel Royal Orchid, Mumbai",
+    "host_relation": "Family",
+    "return_ticket": true,
+    "employment_status": "Software Engineer",
+    "monthly_income_range": "50000-80000 INR",
+    "previous_visits_count": 2,
+    "countries_visited_last_5_years": ["UAE", "Singapore"]
+  },
+  "travel_history": [
+    {
+      "country": "UAE",
+      "visit_year": 2022,
+      "overstay_flag": false,
+      "deportation_flag": false
+    }
+  ]
+}
