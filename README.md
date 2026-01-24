@@ -113,7 +113,7 @@ Features:
 Built by the team Techie Titansn for SHEHACKS 2026
 
 Inzeera Z   
-Hajira Fathima M 
+Hajira Fathima M  
 Bismaya B
 
 
