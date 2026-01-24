@@ -4,6 +4,4 @@ pydantic
 requests
 pillow
 python-multipart
-streamlit
-streamlit_webrtc
-opencv-python
+
