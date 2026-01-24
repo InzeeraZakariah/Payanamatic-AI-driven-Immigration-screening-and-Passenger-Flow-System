@@ -110,7 +110,7 @@ Features:
 ---
 
 ## 👤 Author
-Built by the team Techie Titansn for SHEHACKS 2026
+Built by the team Techie Titans for SHEHACKS 2026
 
 Inzeera Z   
 Hajira Fathima M  
