@@ -1,0 +1,3 @@
+passport_number,purpose_of_visit,destination_address,duration_of_stay_days,return_ticket,employment_status
+N1234567,Tourism,Chennai,14,True,Engineer
+N3456789,Business,Bangalore,5,True,Manager

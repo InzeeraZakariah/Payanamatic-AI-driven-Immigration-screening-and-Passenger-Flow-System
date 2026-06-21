@@ -1,0 +1,4 @@
+passport_number,country,arrival_date,departure_date,overstay_flag,deportation_flag
+N1234567,UAE,2024-01-01,2024-01-15,False,False
+N1234567,Singapore,2023-05-01,2023-05-10,False,False
+N7654321,Canada,2025-03-01,2025-03-20,False,False

@@ -1,0 +1,3 @@
+passport_number,visa_type,issue_date,expiry_date
+N1234567,Tourist,2026-01-01,2026-12-31
+N3456789,Business,2026-02-01,2026-08-01
