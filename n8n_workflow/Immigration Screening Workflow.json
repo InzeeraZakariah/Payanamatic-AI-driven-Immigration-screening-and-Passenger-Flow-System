@@ -1,0 +1,69 @@
+{
+  "name": "Passenger Email Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "passenger-alert",
+        "httpMethod": "POST",
+        "responseMode": "onReceived"
+      },
+      "id": "Webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const p = $input.first().json;\n\nreturn [{\n  json: {\n    email: p.email,\n    subject: 'Payanamatic Screening Result',\n    message: `Dear ${p.full_name},\\n\\nYour immigration screening has been completed.\\n\\nPassport Number: ${p.passport_number}\\nVerification Status: ${p.verification_status}\\nRisk Level: ${p.risk_level}\\nFinal Decision: ${p.final_decision}\\n\\nThank you,\\nPayanamatic Immigration System`\n  }\n}];"
+      },
+      "id": "Code",
+      "name": "Prepare Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$json.email}}",
+        "subject": "={{$json.subject}}",
+        "message": "={{$json.message}}"
+      },
+      "id": "Gmail",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [800, 300],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "Gmail Account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Email": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
