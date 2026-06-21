@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payanamatic - Immigration Intelligence</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="left-panel">
+
+            <h2>Payanamatic Screening</h2>
+
+            <input
+                type="text"
+                id="passportNumber"
+                placeholder="Enter Passport Number"
+            >
+
+            <video
+                id="video"
+                autoplay
+                playsinline
+            ></video>
+
+            <canvas
+                id="canvas"
+                style="display:none;"
+            ></canvas>
+
+            <button id="captureBtn">
+                Capture Photo
+            </button>
+
+            <img
+                id="preview"
+                alt="Captured Image"
+            >
+
+            <button id="screenBtn">
+                Screen Passenger
+            </button>
+
+        </div>
+
+        <div class="right-panel">
+
+            <h2>Screening Result</h2>
+
+            <div id="result">
+
+                <p>Waiting for screening...</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+
+</body>
+</html>
