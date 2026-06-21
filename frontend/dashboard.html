@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payanamatic Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <h1>Officer Dashboard</h1>
+
+    <div class="stats">
+
+        <div class="card">
+            <h2 id="total">0</h2>
+            <p>Total Screenings</p>
+        </div>
+
+        <div class="card">
+            <h2 id="verified">0</h2>
+            <p>Verified</p>
+        </div>
+
+        <div class="card">
+            <h2 id="manual">0</h2>
+            <p>Manual Review</p>
+        </div>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="card">
+            <h2 id="low">0</h2>
+            <p>Low Risk</p>
+        </div>
+
+        <div class="card">
+            <h2 id="medium">0</h2>
+            <p>Medium Risk</p>
+        </div>
+
+        <div class="card">
+            <h2 id="high">0</h2>
+            <p>High Risk</p>
+        </div>
+        <div class="stats">
+
+        <div class="card">
+            <h3>Total Passengers</h3>
+            <span id="passengers"></span>
+        </div>
+
+        <div class="card">
+            <h3>Total Screenings</h3>
+            <span id="screenings"></span>
+        </div>
+
+        <div class="card">
+            <h3>Cleared</h3>
+            <span id="cleared"></span>
+        </div>
+
+    </div>
+
+    </div>
+
+    <h2>Recent Screenings</h2>
+
+    <table id="screeningTable">
+
+        <thead>
+
+        <tr>
+            <th>Name</th>
+            <th>Passport</th>
+            <th>Risk</th>
+            <th>Status</th>
+            <th>Decision</th>
+            <th>Time</th>
+            <th>Action</th>
+        </tr>
+
+
+        </thead>
+
+        <tbody></tbody>
+
+    </table>
+
+</div>
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>
