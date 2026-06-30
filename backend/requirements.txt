@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+pydantic
+python-dotenv
+deepface
+tf-keras
+tensorflow
+opencv-python
+numpy
+pillow
+scikit-learn
+scipy
+chromadb
+httpx
+python-multipart
