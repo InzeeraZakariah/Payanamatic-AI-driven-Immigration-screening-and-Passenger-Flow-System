@@ -1,0 +1,61 @@
+{
+  "passenger": {
+    "passenger_id": 3,
+    "full_name": "Hajira Fathima M",
+    "gender": "Female",
+    "date_of_birth": "1992-07-09",
+    "nationality": "Indian",
+    "passport_number": "N3456789",
+    "email": "hajirafathima2355@gmail.com"
+  },
+  "passport": {
+    "issue_country": "India",
+    "issue_date": "2019-09-20",
+    "expiry_date": "2029-09-19",
+    "passport_type": "Regular",
+    "passport_photo": "base64_passport_image"
+  },
+  "visa": {
+    "visa_type": "Business",
+    "issue_date": "2026-07-01",
+    "expiry_date": "2026-10-15",
+    "entry_type": "Single",
+    "sponsor_type": "Company"
+  },
+  "enquiry_form": {
+    "purpose_of_visit": "Business Meeting",
+    "event_type": "Conference",
+    "duration_of_stay_days": 35,
+    "address_of_stay": "Business Hotel, Bengaluru",
+    "host_relation": "Business Associate",
+    "return_ticket": false,
+    "employment_status": "Business Owner",
+    "monthly_income_range": "80000-120000 INR",
+    "previous_visits_count": 3,
+    "countries_visited_last_5_years": [
+      "UAE",
+      "Qatar",
+      "Singapore"
+    ]
+  },
+  "travel_history": [
+    {
+      "country": "UAE",
+      "visit_year": 2023,
+      "overstay_flag": false,
+      "deportation_flag": false
+    },
+    {
+      "country": "Qatar",
+      "visit_year": 2024,
+      "overstay_flag": true,
+      "deportation_flag": false
+    },
+    {
+      "country": "Singapore",
+      "visit_year": 2025,
+      "overstay_flag": false,
+      "deportation_flag": false
+    }
+  ]
+}

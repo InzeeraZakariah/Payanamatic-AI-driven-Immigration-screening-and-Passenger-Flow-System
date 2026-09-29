@@ -1,0 +1,48 @@
+{
+  "passenger": {
+    "passenger_id": 2,
+    "full_name": "Bismaya B",
+    "gender": "Female",
+    "date_of_birth": "1998-11-23",
+    "nationality": "Indian",
+    "passport_number": "N2345678",
+    "email": "vismayabs123@gmail.com"
+
+  },
+  "passport": {
+    "issue_country": "India",
+    "issue_date": "2021-03-15",
+    "expiry_date": "2031-03-14",
+    "passport_type": "Regular",
+    "passport_photo": "base64_passport_image"
+  },
+  "visa": {
+    "visa_type": "Tourist",
+    "issue_date": "2026-08-10",
+    "expiry_date": "2026-12-10",
+    "entry_type": "Multiple",
+    "sponsor_type": "Self"
+  },
+  "enquiry_form": {
+    "purpose_of_visit": "Tourism",
+    "event_type": "Vacation",
+    "duration_of_stay_days": 10,
+    "address_of_stay": "Hotel Grand Palace, Chennai",
+    "host_relation": "None",
+    "return_ticket": true,
+    "employment_status": "Teacher",
+    "monthly_income_range": "40000-60000 INR",
+    "previous_visits_count": 1,
+    "countries_visited_last_5_years": [
+      "Malaysia"
+    ]
+  },
+  "travel_history": [
+    {
+      "country": "Malaysia",
+      "visit_year": 2024,
+      "overstay_flag": false,
+      "deportation_flag": false
+    }
+  ]
+}

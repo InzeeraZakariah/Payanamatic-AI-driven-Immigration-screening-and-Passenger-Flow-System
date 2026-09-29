@@ -1,0 +1,38 @@
+{
+  "passenger": {
+    "passenger_id": 1,
+    "full_name": "Inzeera Z",
+    "gender": "Female",
+    "date_of_birth": "2004-06-15",
+    "nationality": "Indian",
+    "passport_number": "N1234567",
+    "email": "inzeeraz@gmail.com"
+  },
+  "passport": {
+    "issue_country": "India",
+    "issue_date": "2024-06-20",
+    "expiry_date": "2034-06-19",
+    "passport_type": "Regular",
+    "passport_photo": "base64_passport_image"
+  },
+  "visa": {
+    "visa_type": "Student",
+    "issue_date": "2026-08-01",
+    "expiry_date": "2027-02-01",
+    "entry_type": "Multiple",
+    "sponsor_type": "Self"
+  },
+  "enquiry_form": {
+    "purpose_of_visit": "Education",
+    "event_type": "Academic Program",
+    "duration_of_stay_days": 20,
+    "address_of_stay": "University Hostel, Bengaluru",
+    "host_relation": "None",
+    "return_ticket": true,
+    "employment_status": "Student",
+    "monthly_income_range": "Below 20000 INR",
+    "previous_visits_count": 0,
+    "countries_visited_last_5_years": []
+  },
+  "travel_history": []
+}
