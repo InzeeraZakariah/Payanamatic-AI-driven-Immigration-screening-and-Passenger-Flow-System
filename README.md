@@ -122,44 +122,150 @@ The main objectives of Payanamatic are:
 
 # System Flow Diagram
 
+## System Flow Diagram
+
 ```mermaid
 flowchart LR
+    A["Passport Number and Live Photo"]
+    B["FastAPI Backend"]
+    C["Face Verification<br/>DeepFace + ArcFace"]
+    D["ChromaDB<br/>Face Embeddings"]
+    E["PostgreSQL<br/>Passenger Data"]
+    F["Risk Assessment"]
+    G["Risk Level and Screening Lane"]
+    H["Final Decision"]
+    I["Screening Result"]
+    J["Officer Dashboard"]
+    K["n8n Notification"]
 
-A[Passport Number<br/>+ Live Photo]
---> B[FastAPI Backend]
+    A --> B
+    B --> C
+    C --> D
+    B --> E
+    C --> F
+    E --> F
+    F --> G
+    G --> H
+    H --> I
+    I --> J
+    I --> K
+```
 
-B --> C[Face Verification<br/>DeepFace + ArcFace]
+## System Architecture
 
-C --> D[ChromaDB<br/>Stored Face Embeddings]
+```mermaid
+flowchart TD
+    A["Passenger Screening"]
+    B["FastAPI Backend"]
+    C["Face Service"]
+    D["DeepFace + ArcFace"]
+    E["ChromaDB"]
+    F["Passenger Data"]
+    G["PostgreSQL"]
+    H["Risk Engine"]
+    I["Risk Score"]
+    J["Risk Level"]
+    K["Screening Lane"]
+    L["Final Decision"]
+    M["Screening Result"]
+    N["Officer Dashboard"]
+    O["n8n"]
 
-B --> E[Passenger Profile<br/>PostgreSQL]
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    B --> F
+    F --> G
+    B --> H
+    E --> H
+    G --> H
+    H --> I
+    I --> J
+    J --> K
+    K --> L
+    L --> M
+    M --> N
+    M --> O
+```
 
-E --> F[Visa Details<br/>Enquiry Form<br/>Travel History]
+## Screening Workflow
 
-C --> G[Identity Verification Result]
+```mermaid
+flowchart TD
+    A["Enter Passport Number"]
+    B["Capture Live Photo"]
+    C["Send Screening Request"]
+    D["Retrieve Passenger Profile"]
+    E["Generate Face Embedding"]
+    F["Compare Face Embeddings"]
+    G["Calculate Similarity Score"]
+    H{"Verification Status"}
+    I["Risk Assessment"]
+    J["Manual Review"]
+    K["Calculate Risk Score"]
+    L{"Risk Level"}
+    M["Fast Lane"]
+    N["Assisted Counter"]
+    O["Secondary Screening"]
+    P["Final Decision"]
+    Q["Save Screening Result"]
+    R["PostgreSQL"]
+    S["Display Result"]
+    T["Officer Dashboard"]
+    U["n8n Notification"]
 
-F --> H[Risk Assessment]
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
 
-G --> H
+    H -->|VERIFIED| I
+    H -->|MANUAL_REVIEW| J
+    H -->|FAILED| J
+    H -->|NO_IMAGES_FOUND| J
 
-H --> I[Risk Score]
+    I --> K
+    K --> L
 
-I --> J[Risk Level<br/>+ Screening Lane]
+    L -->|LOW| M
+    L -->|MEDIUM| N
+    L -->|HIGH| O
 
-J --> K[Final Decision]
+    M --> P
+    N --> P
+    O --> P
+    J --> P
 
-K --> L[Screening Result]
+    P --> Q
+    Q --> R
+    Q --> S
+    Q --> T
+    Q --> U
+```
 
-L --> M[PostgreSQL<br/>Screening Record]
+## Notification Workflow
 
-L --> N[Screening Page]
+```mermaid
+flowchart LR
+    A["Screening Completed"]
+    B["FastAPI"]
+    C["n8n Webhook"]
+    D["n8n Workflow"]
+    E["Passenger Notification"]
 
-M --> O[Officer Dashboard]
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+```
 
-M --> P[n8n Webhook]
+## License
 
-P --> Q[Passenger Notification]
-
+This project is developed for academic and prototype purposes.
 ## License
 This project is developed for **SHEHACKS Finale (30th Jan 2026)**.  
 Future licensing terms to be defined for production deployment.
