@@ -120,39 +120,24 @@ The screening page shows:
 - Screening reasons (risk indicators contributing to score)
 
 ---
-
 ## Workflow Diagram
 
-Passport Number
-│
-▼
-Passenger Lookup
-│
-▼
-Live Camera Capture
-│
-▼
-Face Embedding
-│
-▼
-Face Verification
-│
-▼
-Passenger + Visa + Enquiry + Travel History
-│
-▼
-Risk Calculation
-│
-▼
-Risk Level + Lane
-│
-▼
-Final Decision
-│
-├──► Screening Result
-├──► PostgreSQL
-├──► Officer Dashboard
-└──► n8n Notification
+```mermaid
+flowchart TD
+    A[Passport Number] --> B[Passenger Lookup]
+    B --> C[Live Camera Capture]
+    C --> D[Face Embedding]
+    D --> E[Face Verification]
+    E --> F[Passenger + Visa + Enquiry + Travel History]
+    F --> G[Risk Calculation]
+    G --> H[Risk Level + Lane]
+    H --> I[Final Decision]
+
+    I --> J[Screening Result]
+    I --> K[PostgreSQL Storage]
+    I --> L[Officer Dashboard]
+    I --> M[n8n Notification]
+
 
 
 ---
