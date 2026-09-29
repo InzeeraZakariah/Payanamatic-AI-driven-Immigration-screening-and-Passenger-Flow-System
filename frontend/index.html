@@ -1,66 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payanamatic - Immigration Intelligence</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payanamatic | Passenger Immigration Screening</title>
+<link rel="stylesheet" href="style.css?v=10001">
 </head>
 <body>
 
-    <div class="container">
+<nav class="navbar">
+  <div class="logo">Payanam<span>atic</span></div>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Screening</a></li>
+    <li><a href="dashboard.html">Officer Dashboard</a></li>
+  </ul>
+</nav>
 
-        <div class="left-panel">
+<main class="container">
 
-            <h2>Payanamatic Screening</h2>
+  <section class="card">
+    <h2>Passenger Screening</h2>
+    <label for="passportNumber">Passport Number</label>
+    <input type="text" id="passportNumber" placeholder="e.g. N1234567" autocomplete="off">
+    <p class="field-hint" id="passportHint"></p>
 
-            <input
-                type="text"
-                id="passportNumber"
-                placeholder="Enter Passport Number"
-            >
-
-            <video
-                id="video"
-                autoplay
-                playsinline
-            ></video>
-
-            <canvas
-                id="canvas"
-                style="display:none;"
-            ></canvas>
-
-            <button id="captureBtn">
-                Capture Photo
-            </button>
-
-            <img
-                id="preview"
-                alt="Captured Image"
-            >
-
-            <button id="screenBtn">
-                Screen Passenger
-            </button>
-
-        </div>
-
-        <div class="right-panel">
-
-            <h2>Screening Result</h2>
-
-            <div id="result">
-
-                <p>Waiting for screening...</p>
-
-            </div>
-
-        </div>
-
+    <label for="video">Live Camera</label>
+    <div class="camera-wrap">
+      <video id="video" autoplay playsinline muted></video>
+      <img id="preview" alt="Captured passenger photo" hidden>
+      <div id="cameraStatus" class="camera-status" hidden></div>
     </div>
 
-    <script src="app.js"></script>
+    <canvas id="canvas" hidden></canvas>
 
+    <div class="button-row">
+      <button type="button" class="secondary" id="captureBtn">Capture Photo</button>
+      <button type="button" class="secondary ghost" id="retakeBtn" hidden>Retake</button>
+    </div>
+
+    <button type="button" id="screenBtn">Screen Passenger</button>
+  </section>
+
+  <section class="card result" id="resultCard" aria-live="polite">
+    <h2>Screening Result</h2>
+    <div id="result">
+      <div class="empty-result">
+        <p>Capture a photo and screen a passenger to see results here.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="app.js?v=10001"></script>
 </body>
 </html>
