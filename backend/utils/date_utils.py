@@ -1,9 +1,8 @@
-from datetime import datetime
+from datetime import date
 
 def days_until(date_value):
     if not date_value:
-        return None
-    
-    today = datetime.now().date()
+        return 9999
 
-    return (date_value - today).days
+    today = date.today()
+    return (target_date - today).days
