@@ -109,7 +109,6 @@ function retakePhoto() {
 }
 
 
-
 async function screenPassenger() {
     if (isScreening) return;
 
@@ -148,7 +147,6 @@ async function screenPassenger() {
 
         console.log("HTTP STATUS:", response.status);
 
-        // ---------- HTTP ERROR ----------
         if (!response.ok) {
             let errorMessage = `Screening failed (HTTP ${response.status}).`;
 
