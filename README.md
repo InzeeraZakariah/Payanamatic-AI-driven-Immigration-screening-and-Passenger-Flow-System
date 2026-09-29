@@ -1,4 +1,4 @@
-# Payanamatic — AI-Based Smart Border & Immigration Screening System
+# Payanamatic: AI-powered smart immigration screening and passenger flow system
 
 ## Overview
 Payanamatic is an AI-powered smart border and immigration screening system designed to assist immigration officers in:
