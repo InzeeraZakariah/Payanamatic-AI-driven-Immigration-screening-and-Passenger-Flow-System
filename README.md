@@ -87,11 +87,7 @@ This increases processing time and workload for officers.
 
 ---
 
-## Project Structure
-
----
-
-## Basic Usage
+## Project Structure 
 
 ### Passenger Screening
 1. Open the **Screening Page**
@@ -163,6 +159,7 @@ flowchart TD
   - Always → MANUAL_REVIEW
 
 ---
+```
 
 ## Future Enhancements
 - Officer authentication & role-based access control  
