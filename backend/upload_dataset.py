@@ -1,226 +1,181 @@
 import os
-import traceback
+import json
+from datetime import datetime
+from database import SessionLocal, Base, engine
+from models import Passenger, PassportDetail, VisaDetail, EnquiryForm, TravelHistory
 
-from database import sessionLocal
-from models import Passenger, PassengerImage, VisaDetail, EnquiryForm, TravelHistory, PassportDetail
+def parse_date(value):
+    if not value:
+        return None
+    return datetime.strptime(value, "%Y-%m-%d").date()
 
-from services.face_service import generate_embedding
-from services.chroma_service import save_embedding
+def clear_database(db):
+    print("\nClearing old database data...")
+    db.query(TravelHistory).delete()
+    db.query(EnquiryForm).delete()
+    db.query(VisaDetail).delete()
+    db.query(PassportDetail).delete()
+    db.query(Passenger).delete()
+    db.commit()
+    print("Old data deleted successfully.")
 
-import pandas as pd
+def load_passenger_json(db, json_file):
+    print(f"\nLoading: {os.path.basename(json_file)}")
+    with open(json_file, "r", encoding="utf-8") as file:
+        data = json.load(file)
 
-DATASET_DIR = "dataset"
+    passenger_data = data["passenger"]
+    passport_data = data["passport"]
+    visa_data = data["visa"]
+    enquiry_data = data["enquiry_form"]
+    history_data = data.get("travel_history", [])
 
-passengers_df = pd.read_csv(os.path.join("dataset", "passengers.csv"))
-passport_details_df = pd.read_csv(os.path.join("dataset", "passport_details.csv"))
-travel_history_df = pd.read_csv(os.path.join("dataset", "travel_history.csv"))
-visa_details_df = pd.read_csv(os.path.join("dataset", "visa_details.csv"))
-enquiry_forms_df = pd.read_csv(os.path.join("dataset", "enquiry_forms.csv"))
+    passenger = Passenger(
+        full_name=passenger_data["full_name"],
+        gender=passenger_data.get("gender"),
+        dob=parse_date(passenger_data.get("date_of_birth")),
+        nationality=passenger_data.get("nationality"),
+        passport_number=passenger_data["passport_number"],
+        email=passenger_data.get("email")
+    )
+    db.add(passenger)
+    db.flush()
 
+    passport = PassportDetail(
+        passenger_id=passenger.id,
+        issue_country=passport_data.get("issue_country"),
+        issue_date=parse_date(passport_data.get("issue_date")),
+        expiry_date=parse_date(passport_data.get("expiry_date")),
+        passport_type=passport_data.get("passport_type"),
+        passport_photo=passport_data.get("passport_photo")
+    )
+    db.add(passport)
 
-def parse_filename(filename):
-    """
-    Expected format:
-    Inzeera_2024_28.jpg
+    visa = VisaDetail(
+        passenger_id=passenger.id,
+        visa_type=visa_data.get("visa_type"),
+        issue_date=parse_date(visa_data.get("issue_date")),
+        expiry_date=parse_date(visa_data.get("expiry_date")),
+        entry_type=visa_data.get("entry_type"),
+        sponsor_type=visa_data.get("sponsor_type")
+    )
+    db.add(visa)
 
-    Returns:
-    name, photo_year, age
-    """
-    filename = os.path.splitext(filename)[0]
-    parts = filename.split("_")
+    countries = enquiry_data.get("countries_visited_last_5_years", [])
+    if isinstance(countries, list):
+        countries = ", ".join(countries)
 
-    if len(parts) != 3:
-        raise ValueError(
-            f"Invalid filename format: {filename}\n"
-            "Expected: Name_Year_Age.jpg"
+    enquiry = EnquiryForm(
+        passenger_id=passenger.id,
+        purpose_of_visit=enquiry_data.get("purpose_of_visit"),
+        event_type=enquiry_data.get("event_type"),
+        duration_of_stay_days=enquiry_data.get("duration_of_stay_days"),
+        address_of_stay=enquiry_data.get("address_of_stay"),
+        host_relation=enquiry_data.get("host_relation"),
+        return_ticket=enquiry_data.get("return_ticket"),
+        employment_status=enquiry_data.get("employment_status"),
+        monthly_income_range=enquiry_data.get("monthly_income_range"),
+        previous_visits_count=enquiry_data.get("previous_visits_count"),
+        countries_visited_last_5_years=countries
+    )
+    db.add(enquiry)
+
+    for trip in history_data:
+        history = TravelHistory(
+            passenger_id=passenger.id,
+            country=trip.get("country"),
+            visit_year=trip.get("visit_year"),
+            overstay_flag=trip.get("overstay_flag", False),
+            deportation_flag=trip.get("deportation_flag", False)
         )
+        db.add(history)
 
-    name = parts[0]
-    photo_year = int(parts[1])
-    age = int(parts[2])
+    db.commit()
+    print(f"Loaded successfully: {passenger.full_name} ({passenger.passport_number})")
 
-    return name, photo_year, age
+def seed_database():
+    print("\n======================================")
+    print(" PAYANAMATIC DATABASE SEEDING")
+    print("======================================")
 
-
-def import_dataset():
-
-    db = sessionLocal()
-
-    total_passengers = 0
-    total_images = 0
+    db = SessionLocal()
 
     try:
+        print("\nChecking database tables...")
+        Base.metadata.create_all(bind=engine)
+        print("Tables ready.")
 
-        for folder_name in os.listdir(DATASET_DIR):
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-            folder_path = os.path.join(DATASET_DIR, folder_name)
+        dataset_path = os.path.join(BASE_DIR, "..", "dataset")
 
-            if not os.path.isdir(folder_path):
-                continue
+        if not os.path.exists(dataset_path):
+            dataset_path = os.path.join(BASE_DIR, "dataset")
 
-            passenger_name = folder_name
+        dataset_path = os.path.abspath(dataset_path)
 
-            print(f"\nProcessing Passenger: {passenger_name}")
+        print(f"\nDataset folder:\n{dataset_path}")
 
-            # Check if passenger already exists
-            passenger = (
-                db.query(Passenger)
-                .filter(Passenger.full_name == passenger_name)
-                .first()
-            )
+        if not os.path.isdir(dataset_path):
+            print("\nERROR: Dataset folder not found.")
+            print("\nExpected either:")
+            print(os.path.join(BASE_DIR, "..", "dataset"))
+            print(os.path.join(BASE_DIR, "dataset"))
+            return
 
-            if not passenger:
-                passenger_row = passengers_df[passengers_df["full_name"] == passenger_name]
+        print("\nFiles inside dataset folder:")
+        for file in os.listdir(dataset_path):
+            print("  ", file)
 
-                if passenger_row.empty:
-                    print(f"No CSV record found for {passenger_name}")
-                    continue
+        clear_database(db)
 
-                passenger_data = passenger_row.iloc[0]
-                dob = pd.to_datetime(passenger_data["date_of_birth"]).date()
+        json_files = sorted([
+            os.path.join(dataset_path, file)
+            for file in os.listdir(dataset_path)
+            if file.lower().endswith(".json")
+        ])
 
-                passenger = Passenger(
-                    passport_number=passenger_data["passport_number"],
-                    full_name=passenger_data["full_name"],
-                    gender=passenger_data["gender"],
-                    nationality=passenger_data["nationality"],
-                    dob=dob,
-                    email=passenger_data["email"]
-                )
+        if not json_files:
+            print("\nERROR: No JSON files found.")
+            return
 
-                db.add(passenger)
-                db.commit()
-                db.refresh(passenger) 
+        print(f"\nFound {len(json_files)} JSON file(s).")
 
-                try:
+        for json_file in json_files:
+            try:
+                load_passenger_json(db, json_file)
+            except Exception as error:
+                db.rollback()
+                print(f"\nERROR loading {os.path.basename(json_file)}")
+                print(error)
 
-                    # Passport details
-                    passport_row = passport_details_df[passport_details_df["passport_number"] == passenger.passport_number]
-                    passport_data = passport_row.iloc[0]
-                    passport_record = PassportDetail(
-                        passenger_id=passenger.id,
-                        passport_number=passenger.passport_number,
-                        passport_type=passport_data["passport_type"],
-                        issuing_country=passport_data["issuing_country"],
-                        issue_date=pd.to_datetime(passport_data["issue_date"]).date(),
-                        expiry_date=pd.to_datetime(passport_data["expiry_date"]).date()
-                    )
-                    db.add(passport_record)
+        print("\n======================================")
+        print(" DATABASE VERIFICATION")
+        print("======================================")
 
-                    # Visa details
-                    visa_row = visa_details_df[
-                        visa_details_df["passport_number"] == passenger.passport_number
-                    ]
-                    visa_data = visa_row.iloc[0]
-                    visa_record = VisaDetail(
-                        passenger_id=passenger.id,
-                        visa_type=visa_data["visa_type"],
-                        issue_date=pd.to_datetime(visa_data["issue_date"]).date(),
-                        expiry_date=pd.to_datetime(visa_data["expiry_date"]).date()
-                    )
-                    db.add(visa_record)
+        passenger_count = db.query(Passenger).count()
+        passport_count = db.query(PassportDetail).count()
+        visa_count = db.query(VisaDetail).count()
+        enquiry_count = db.query(EnquiryForm).count()
+        history_count = db.query(TravelHistory).count()
 
-                    # Enquiry form
-                    enquiry_row = enquiry_forms_df[
-                        enquiry_forms_df["passport_number"] == passenger.passport_number
-                    ]
-                    enquiry_data = enquiry_row.iloc[0]
-                    enquiry_record = EnquiryForm(
-                        passenger_id=passenger.id,
-                        purpose_of_visit=enquiry_data["purpose_of_visit"],
-                        destination_address=enquiry_data["destination_address"],
-                        duration_of_stay_days=int(enquiry_data["duration_of_stay_days"]),
-                        return_ticket=str(enquiry_data["return_ticket"]).lower() == "true",
-                        employment_status=enquiry_data["employment_status"]
-                    )
-                    db.add(enquiry_record)
+        print(f"Passengers       : {passenger_count}")
+        print(f"Passport Details : {passport_count}")
+        print(f"Visa Details     : {visa_count}")
+        print(f"Enquiry Forms    : {enquiry_count}")
+        print(f"Travel History   : {history_count}")
 
-                    # Travel History
-                    history_row = travel_history_df[
-                        travel_history_df["passport_number"] == passenger.passport_number
-                    ]
-                    for _, history in history_row.iterrows():
-                        history_record = TravelHistory(
-                            passenger_id=passenger.id,
-                            country=history["country"],
-                            arrival_date=pd.to_datetime(history["arrival_date"]).date(),
-                            departure_date=pd.to_datetime(history["departure_date"]).date(),
-                            overstay_flag=str(history["overstay_flag"]).lower() == "true",
-                            deportation_flag=str(history["deportation_flag"]).lower() == "true"
-                        )
-                        db.add(history_record)
+        print("\n======================================")
+        print(" DATABASE SEEDING COMPLETED")
+        print("======================================\n")
 
-                    db.commit()
-                    total_passengers += 1
-                    print(f"Created Passenger: {passenger.full_name}")
-
-                except Exception as e:
-                    db.rollback()
-                    print(f"Failed to insert related records for {passenger_name}: {e}")
-                    traceback.print_exc()
-                    continue
-
-            else:
-                print(f"Passenger already exists: {passenger_name}, skipping record creation.")
-
-            # Process Images — skip if already imported
-            existing_images = db.query(PassengerImage).filter(
-                PassengerImage.passenger_id == passenger.id
-            ).count()
-
-            if existing_images > 0:
-                print(f"Images already imported for {passenger_name}, skipping.")
-                continue
-
-            for image_file in os.listdir(folder_path):
-
-                if not image_file.lower().endswith((".jpg", ".jpeg", ".png")):
-                    continue
-
-                image_path = os.path.join(folder_path, image_file)
-
-                try:
-                    (name, photo_year, age) = parse_filename(image_file)
-                    print(f"Generating embedding for: {image_file}")
-
-                    # Save image metadata
-                    image_record = PassengerImage(
-                        passenger_id=passenger.id,
-                        image_path=image_path,
-                        photo_year=photo_year,
-                        age_at_capture=age
-                    )
-                    db.add(image_record)
-                    db.commit()
-                    db.refresh(image_record)
-
-                    # Generate embedding
-                    embedding = generate_embedding(image_path)
-
-                    # Store in ChromaDB
-                    save_embedding(
-                        passenger_id=passenger.id,
-                        image_id=image_record.id,
-                        full_name=passenger.full_name,
-                        photo_year=photo_year,
-                        age=age,
-                        embedding=embedding
-                    )
-
-                    total_images += 1
-                    print(f"Imported: {image_file}")
-
-                except Exception as e:
-                    print(f"\nFailed: {image_file}")
-                    traceback.print_exc()
-
-        print("\nImport Complete")
-        print(f"Passengers Imported: {total_passengers}")
-        print(f"Images Imported: {total_images}")
+    except Exception as error:
+        db.rollback()
+        print("\nDATABASE SEEDING FAILED:")
+        print(error)
 
     finally:
         db.close()
 
-
 if __name__ == "__main__":
-    import_dataset()
+    seed_database()
