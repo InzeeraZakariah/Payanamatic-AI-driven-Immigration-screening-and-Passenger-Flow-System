@@ -88,3 +88,118 @@ This increases processing time and workload for officers.
 ---
 
 ## Project Structure
+
+---
+
+## Basic Usage
+
+### Passenger Screening
+1. Open the **Screening Page**
+2. Enter a valid passport number
+3. Allow browser camera access
+4. Capture the passenger image
+5. Click **Screen Passenger**
+6. Wait for face verification and risk assessment
+7. Review the generated screening result
+
+### Officer Dashboard
+- Open the **Officer Dashboard**
+- Review summary cards
+- Check risk distribution
+- Check passenger-flow allocation
+- Review the recent-screenings table
+- Dashboard auto-refreshes for live monitoring
+
+### Screening Result Display
+The screening page shows:
+- Passenger Information (ID, Name, Passport, Gender, Nationality)
+- Identity Verification (Similarity score, Verification status)
+- Risk Assessment (Risk score, Risk level, Assigned lane)
+- Final Decision
+- Notification status
+- Screening reasons (risk indicators contributing to score)
+
+---
+
+## Workflow Diagram
+
+Passport Number
+│
+▼
+Passenger Lookup
+│
+▼
+Live Camera Capture
+│
+▼
+Face Embedding
+│
+▼
+Face Verification
+│
+▼
+Passenger + Visa + Enquiry + Travel History
+│
+▼
+Risk Calculation
+│
+▼
+Risk Level + Lane
+│
+▼
+Final Decision
+│
+├──► Screening Result
+├──► PostgreSQL
+├──► Officer Dashboard
+└──► n8n Notification
+
+
+---
+
+## Security & Operational Considerations
+- Camera access requires browser permission  
+- PostgreSQL credentials must be secured (no hardcoding)  
+- Protect API endpoints before production deployment  
+- Use **HTTPS** in production  
+- Handle biometric data according to privacy laws  
+- Officer access controls required  
+- AI-generated results must remain subject to human review  
+
+---
+
+## Example Screening States
+- **VERIFIED**
+  - LOW/MEDIUM RISK → CLEARED
+  - HIGH RISK → SECONDARY_SCREENING
+- **MANUAL_REVIEW**
+  - Always → MANUAL_REVIEW
+- **FAILED**
+  - Always → MANUAL_REVIEW
+
+---
+
+## Future Enhancements
+- Officer authentication & role-based access control  
+- Advanced dashboard analytics  
+- Screening-result history & filtering  
+- Exportable screening reports  
+- Audit logs  
+- Improved camera-quality validation  
+- Multi-camera integration  
+- Secure biometric-data management  
+- Larger dataset for model evaluation  
+
+---
+
+## License
+This project is developed for **SHEHACKS Finale (30th Jan 2026)**.  
+Future licensing terms to be defined for production deployment.
+
+---
+
+## Contributors
+- **Inzeera Z**  
+- **Hajira Fathima M**  
+- **Bismaya B**
+
